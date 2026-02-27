@@ -1,7 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
-import React from 'react';
 import styles from '../components/Books/BookItem/BookItem.module.css';
 
 // eslint-disable-next-line import/prefer-default-export
