@@ -42,3 +42,4 @@ export function generateStarsInputs(rating, register, readOnly = false) {
   }
   return stars;
 }
+
