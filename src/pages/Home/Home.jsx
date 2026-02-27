@@ -8,20 +8,33 @@ import { getBooks } from '../../lib/common';
 function Home() {
   const [books, setBooks] = useState(null);
   const [loading, setLoading] = useState(true);
-  // eslint-disable-next-line max-len
-  const displayBooks = () => (books ? books.map((book) => <BookItem size={2} book={book} key={book.id} />) : <h1>Vide</h1>);
+  const [error, setError] = useState(null);
+
+  const displayBooks = () => (
+    books && books.length > 0 
+      ? books.map((book) => <BookItem size={2} book={book} key={book.id} />) 
+      : <h1>Aucun livre disponible</h1>
+  );
 
   useEffect(() => {
     async function getBooksList() {
-      const data = await getBooks();
-      if (data) {
-        setBooks(data);
-        setLoading(false);
+      try {
+        const data = await getBooks();
+        console.log('Books received:', data); // Pour déboguer
+        setBooks(data || []);
+      } catch (err) {
+        console.error('Error fetching books:', err);
+        setError(err.message);
+        setBooks([]);
+      } finally {
+        setLoading(false); // ⚠️ IMPORTANT : always set loading to false
       }
     }
     getBooksList();
   }, []);
+
   const backgroundImageStyle = { backgroundImage: `url(${Banner})` };
+
   return (
     <div className={styles.Home}>
       <div className={styles.banner} style={backgroundImageStyle} />
@@ -32,12 +45,16 @@ function Home() {
           <Link to="/Ajouter" className="button">+ Ajouter un livre</Link>
         </header>
         <section className={styles.bookList}>
-          {loading ? <h1>Chargement</h1> : displayBooks()}
+          {loading ? (
+            <h1>Chargement...</h1>
+          ) : error ? (
+            <h1 style={{ color: 'red' }}>Erreur : {error}</h1>
+          ) : (
+            displayBooks()
+          )}
         </section>
       </main>
-
     </div>
-
   );
 }
 
